@@ -54,7 +54,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 40px 60px;
+  padding: clamp(20px, 4vw, 40px) clamp(20px, 5vw, 60px);
   z-index: 10;
   box-sizing: border-box;
   background: transparent;
@@ -186,7 +186,7 @@ body {
 
 .hero-name-giant {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 96px;
+  font-size: clamp(48px, 8vw, 96px);
   line-height: 0.9;
   letter-spacing: 2px;
   color: #ffffff;
@@ -282,7 +282,7 @@ body {
   position: relative;
   z-index: 20;
   background: transparent;
-  padding: 80px 60px;
+  padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 60px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -297,7 +297,7 @@ body {
 
 .section-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 44px;
+  font-size: clamp(28px, 5vw, 44px);
   letter-spacing: 2px;
   color: #ffffff;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
@@ -685,24 +685,28 @@ body {
 }
 
 /* Responsive adjustments */
-@media (max-width: 900px) {
-  .hero-grid-2col, .projects-grid, .edu-skills-container, .process-container, .footer-container {
-    grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .portfolio-section {
-    padding: 60px 24px;
-  }
-  .tech-banner-items {
-    display: none;
+  .edu-skills-container, .process-container, .footer-container {
+    gap: 40px;
   }
 }
 
-/* Strict Mobile Fixes for 375px/390px Viewports */
 @media (max-width: 768px) {
   /* Prevent media from breaking the viewport */
   img, video, canvas {
     max-width: 100%;
     height: auto;
+  }
+
+  .hero-grid-2col, .projects-grid, .edu-skills-container, .process-container, .footer-container {
+    grid-template-columns: 1fr;
+  }
+
+  .tech-banner-items {
+    display: none;
   }
 
   /* Navbar Adjustments */
@@ -735,24 +739,20 @@ body {
   .hero-ref-left {
     max-width: 100%;
   }
-  .hero-name-giant {
-    font-size: 56px; /* Shrink from 96px to prevent wrap overflow */
-    word-break: break-word; /* Safety fallback */
-  }
   .hero-ref-right {
     width: 100%;
     gap: 32px;
+    align-items: flex-start;
   }
   .hero-stats {
     width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
   }
-
-  /* Typography Adjustments */
-  .section-title {
-    font-size: 32px;
-  }
-  .footer-heading {
-    font-size: 40px;
+  
+  .stat-num {
+    font-size: clamp(32px, 8vw, 48px);
   }
 
   /* Project Image */
@@ -764,5 +764,18 @@ body {
   .quote-card {
     padding: 24px;
     min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-stats {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .nav-links {
+    gap: 12px;
+  }
+  .nav-link {
+    font-size: 10px;
   }
 }
