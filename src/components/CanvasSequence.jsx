@@ -11,6 +11,26 @@ export default function CanvasSequence({ scrollProgress }) {
   
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
+  const sizeRef = useRef({ 
+    w: typeof window !== 'undefined' ? window.innerWidth : 1000, 
+    h: typeof window !== 'undefined' ? window.innerHeight : 800 
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+      const currentHeight = window.innerHeight;
+      const prev = sizeRef.current;
+      
+      // On mobile, ignore small height changes caused by the address bar hiding/showing
+      if (Math.abs(currentWidth - prev.w) > 0 || Math.abs(currentHeight - prev.h) > 120) {
+        sizeRef.current = { w: currentWidth, h: currentHeight };
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     // Format frame index with 3 leading zeros
@@ -92,8 +112,8 @@ export default function CanvasSequence({ scrollProgress }) {
       const img = imagesRef.current[frameIdx];
 
       const dpr = window.devicePixelRatio || 1;
-      const w = window.innerWidth * dpr;
-      const h = window.innerHeight * dpr;
+      const w = sizeRef.current.w * dpr;
+      const h = sizeRef.current.h * dpr;
 
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
