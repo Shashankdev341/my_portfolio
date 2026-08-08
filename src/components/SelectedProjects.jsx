@@ -25,7 +25,6 @@ export default function SelectedProjects() {
   return (
     <section className="portfolio-section" id="projects">
       <div className="section-header">
-        <h2 className="section-title">SELECTED PROJECTS</h2>
         <a href="https://github.com/Shashankdev341" target="_blank" rel="noreferrer" className="section-link">
           VIEW ALL ON GITHUB <ArrowRight className="w-4 h-4" />
         </a>
