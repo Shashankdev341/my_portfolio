@@ -11,6 +11,8 @@ export default function CanvasSequence({ scrollProgress }) {
   
   const currentFrameRef = useRef(0);
   const targetFrameRef = useRef(0);
+  const lastRenderedFrameRef = useRef(-1);
+  const lastDrawSizeRef = useRef({ w: 0, h: 0 });
   const sizeRef = useRef({ 
     w: typeof window !== 'undefined' ? window.innerWidth : 1000, 
     h: typeof window !== 'undefined' ? window.innerHeight : 800 
@@ -134,51 +136,60 @@ export default function CanvasSequence({ scrollProgress }) {
         const drawWidth = Math.floor(img.naturalWidth * scale);
         const drawHeight = Math.floor(img.naturalHeight * scale);
         
-        if (offCanvas.width !== drawWidth || offCanvas.height !== drawHeight) {
-          offCanvas.width = drawWidth;
-          offCanvas.height = drawHeight;
-        }
-
         const x = Math.floor((w - drawWidth) / 2);
         const y = Math.floor((h - drawHeight) / 2);
 
-        // Draw to offscreen canvas
-        offCtx.clearRect(0, 0, drawWidth, drawHeight);
-        offCtx.drawImage(img, 0, 0, drawWidth, drawHeight);
-
-        // Optimized subject pixel masking using Uint32Array
-        const imgData = offCtx.getImageData(0, 0, drawWidth, drawHeight);
-        const data32 = new Uint32Array(imgData.data.buffer);
-        
-        const centerX = drawWidth / 2;
-        const centerY = drawHeight / 2;
-        let i = 0;
-
-        for (let py = 0; py < drawHeight; py++) {
-          const dy = (py - centerY) / centerY;
-          const dySq = dy * dy;
-          for (let px = 0; px < drawWidth; px++) {
-            const dx = (px - centerX) / centerX;
-            const distSq = dx * dx + dySq;
-            
-            const pixel = data32[i];
-            const r = pixel & 0xff;
-            const g = (pixel >> 8) & 0xff;
-            const b = (pixel >> 16) & 0xff;
-            
-            // Spatial thresholding:
-            // Center of screen (character): Threshold is ~2 (only removes absolute black, protecting dark clothes/hair)
-            // Edges of screen (background): Threshold is ~14+ (clears all JPEG background compression artifacts)
-            const threshold = 2 + (distSq * 12);
-            
-            if (r < threshold && g < threshold && b < threshold) {
-              data32[i] = 0; // Make background transparent
-            }
-            i++;
+        if (
+          frameIdx !== lastRenderedFrameRef.current || 
+          drawWidth !== lastDrawSizeRef.current.w || 
+          drawHeight !== lastDrawSizeRef.current.h
+        ) {
+          if (offCanvas.width !== drawWidth || offCanvas.height !== drawHeight) {
+            offCanvas.width = drawWidth;
+            offCanvas.height = drawHeight;
           }
-        }
 
-        offCtx.putImageData(imgData, 0, 0);
+          // Draw to offscreen canvas
+          offCtx.clearRect(0, 0, drawWidth, drawHeight);
+          offCtx.drawImage(img, 0, 0, drawWidth, drawHeight);
+
+          // Optimized subject pixel masking using Uint32Array
+          const imgData = offCtx.getImageData(0, 0, drawWidth, drawHeight);
+          const data32 = new Uint32Array(imgData.data.buffer);
+          
+          const centerX = drawWidth / 2;
+          const centerY = drawHeight / 2;
+          let i = 0;
+
+          for (let py = 0; py < drawHeight; py++) {
+            const dy = (py - centerY) / centerY;
+            const dySq = dy * dy;
+            for (let px = 0; px < drawWidth; px++) {
+              const dx = (px - centerX) / centerX;
+              const distSq = dx * dx + dySq;
+              
+              const pixel = data32[i];
+              const r = pixel & 0xff;
+              const g = (pixel >> 8) & 0xff;
+              const b = (pixel >> 16) & 0xff;
+              
+              // Spatial thresholding:
+              // Center of screen (character): Threshold is ~2 (only removes absolute black, protecting dark clothes/hair)
+              // Edges of screen (background): Threshold is ~14+ (clears all JPEG background compression artifacts)
+              const threshold = 2 + (distSq * 12);
+              
+              if (r < threshold && g < threshold && b < threshold) {
+                data32[i] = 0; // Make background transparent
+              }
+              i++;
+            }
+          }
+
+          offCtx.putImageData(imgData, 0, 0);
+          
+          lastRenderedFrameRef.current = frameIdx;
+          lastDrawSizeRef.current = { w: drawWidth, h: drawHeight };
+        }
 
         ctx.save();
         // Fully opaque so the character solidly blocks the text behind him
