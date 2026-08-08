@@ -24,7 +24,7 @@ export default function SelectedProjects() {
 
   return (
     <section className="portfolio-section" id="projects">
-      <div className="section-header">
+      <div className="section-header" style={{ justifyContent: 'flex-end', paddingTop: '40px' }}>
         <a href="https://github.com/Shashankdev341" target="_blank" rel="noreferrer" className="section-link">
           VIEW ALL ON GITHUB <ArrowRight className="w-4 h-4" />
         </a>
