@@ -728,7 +728,11 @@ body {
     display: flex;
     background: transparent;
     border: none;
+    color: #ffffff;
+    cursor: pointer;
     z-index: 100;
+    width: 24px;
+    height: 24px;
   }
   .nav-links {
     display: none;
