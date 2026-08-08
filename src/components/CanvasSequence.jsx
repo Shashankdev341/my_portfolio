@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 const FRAME_COUNT = 300;
 const LERP_FACTOR = 0.1;
 
-export default function CanvasSequence({ scrollProgress }) {
+export default function CanvasSequence() {
   const canvasRef = useRef(null);
   const offCanvasRef = useRef(null);
   const imagesRef = useRef([]);
@@ -59,10 +59,20 @@ export default function CanvasSequence({ scrollProgress }) {
     };
   }, []);
 
-  // Update target frame when scrollProgress changes
+  // Update target frame directly on scroll without React state re-renders
   useEffect(() => {
-    targetFrameRef.current = Math.min(FRAME_COUNT - 1, Math.max(0, scrollProgress * (FRAME_COUNT - 1)));
-  }, [scrollProgress]);
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, scrollTop / maxScroll));
+      targetFrameRef.current = Math.min(FRAME_COUNT - 1, Math.max(0, progress * (FRAME_COUNT - 1)));
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Render loop
   useEffect(() => {

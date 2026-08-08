@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mail, Globe, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 
-export default function FooterContact() {
+const FooterContact = () => {
   return (
     <section className="portfolio-section" id="contact">
       <div className="footer-container">
@@ -66,4 +66,6 @@ export default function FooterContact() {
       </div>
     </section>
   );
-}
+};
+
+export default React.memo(FooterContact);

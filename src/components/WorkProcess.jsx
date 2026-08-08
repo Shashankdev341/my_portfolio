@@ -28,7 +28,7 @@ const steps = [
   }
 ];
 
-export default function WorkProcess() {
+const WorkProcess = () => {
   return (
     <section className="portfolio-section" id="process">
       <div className="section-header">
@@ -63,4 +63,6 @@ export default function WorkProcess() {
       </div>
     </section>
   );
-}
+};
+
+export default React.memo(WorkProcess);

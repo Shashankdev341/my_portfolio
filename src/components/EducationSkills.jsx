@@ -7,7 +7,7 @@ const skills = [
   'SQL', 'PyTorch', 'Node.js', 'Git', 'FastAPI'
 ];
 
-export default function EducationSkills() {
+const EducationSkills = () => {
   return (
     <section className="portfolio-section" id="education-skills">
       <div className="section-header">
@@ -58,4 +58,6 @@ export default function EducationSkills() {
       </div>
     </section>
   );
-}
+};
+
+export default React.memo(EducationSkills);

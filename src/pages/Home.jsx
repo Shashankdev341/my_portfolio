@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import CanvasSequence from '../components/CanvasSequence';
 import Hero from '../components/Hero';
@@ -7,7 +7,6 @@ import WorkProcess from '../components/WorkProcess';
 import FooterContact from '../components/FooterContact';
 
 export default function Home() {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
@@ -23,24 +22,12 @@ export default function Home() {
     }
   }, [location]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, scrollTop / maxScroll));
-      setScrollProgress(progress);
-    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <>
       {/* 1. Full-Page Video Animation Canvas (Fixed Background) */}
-      <CanvasSequence scrollProgress={scrollProgress} />
+      <CanvasSequence />
 
       {/* 2. Hero Overlay Layer */}
       <section id="home" className="relative z-10 h-screen w-full">
