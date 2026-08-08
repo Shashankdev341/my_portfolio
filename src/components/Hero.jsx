@@ -1,7 +1,7 @@
 import React from 'react';
 import { Globe, Sparkles, Navigation } from 'lucide-react';
 
-function Hero() {
+export default function Hero() {
   return (
     <div className="hero-container-full">
 
