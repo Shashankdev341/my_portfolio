@@ -163,6 +163,10 @@ body {
   color: #ffffff;
 }
 
+.mobile-menu-toggle {
+  display: none;
+}
+
 /* Reference Hero Layout */
 .hero-ref-layout {
   width: 100%;
@@ -717,17 +721,39 @@ body {
   /* Navbar Adjustments */
   .navbar-fixed {
     padding: 16px 20px;
-    flex-wrap: wrap;
-    gap: 16px;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+  .mobile-menu-toggle {
+    display: flex;
+    background: transparent;
+    border: none;
+    z-index: 100;
   }
   .nav-links {
-    width: 100%;
+    display: none;
+  }
+  .nav-links.mobile-menu-active {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 5, 7, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 90;
     justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+  }
+  .nav-links.mobile-menu-active .nav-link {
+    font-size: 24px;
+    font-weight: 800;
   }
   .nav-freelance {
-    display: none; /* Hide freelance button to save horizontal space */
+    display: none;
   }
 
   /* Hero Section Adjustments */
