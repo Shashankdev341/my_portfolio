@@ -732,7 +732,7 @@ body {
 
   /* Hero Section Adjustments */
   .hero-container-full {
-    padding: 100px 20px 40px; /* Accommodate wrapped navbar */
+    padding: 50vh 20px 40px; /* Accommodate wrapped navbar */
     height: auto;
     min-height: 100vh;
   }
