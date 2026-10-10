@@ -46,6 +46,9 @@ body {
   display: block;
   z-index: 0;
   pointer-events: none;
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* Hero Section Overlay */
@@ -709,6 +712,12 @@ body {
   img, video, canvas {
     max-width: 100%;
     height: auto;
+  }
+
+  /* Solid background on mobile stops the GPU from compositing the fixed canvas
+     behind these transparent sections — eliminates a major source of scroll jank */
+  .portfolio-section {
+    background: #050507;
   }
 
   .hero-grid-2col, .projects-grid, .edu-skills-container, .process-container, .footer-container {
