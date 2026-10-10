@@ -239,9 +239,12 @@ export default function CanvasSequence() {
             ctx.restore();
           }
         }
-      }
 
-      lastRenderedFrameRef.current = frameIdx;
+        // Only mark frame as rendered AFTER the image was actually drawn.
+        // If the image hasn't loaded yet, we leave lastRenderedFrameRef at -1
+        // so the render loop keeps retrying until the first frame appears.
+        lastRenderedFrameRef.current = frameIdx;
+      }
       animFrameRef.current = requestAnimationFrame(render);
     };
 
